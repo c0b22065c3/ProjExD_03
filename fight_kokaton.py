@@ -92,13 +92,7 @@ class Beam:
         引数 bird：こうかとんインスタンス（Birdクラスのインスタンス）
         """
         self.img = pg.transform.flip(  # 左右反転
-            pg.transform.rotozoom(  # 2倍に拡大
-                pg.image.load(f"ex03/fig/beam.png"), 
-                0, 
-                2.0), 
-            True, 
-            False
-        )
+            pg.transform.rotozoom(pg.image.load(f"ex03/fig/beam.png"), 0, 2.0), True, False)
         self.rct = self.img.get_rect()
         self.rct.left = bird.rct.right  # こうかとんの右横座標
         self.rct.centery = bird.rct.centery  # こうかとんの中心縦座標
