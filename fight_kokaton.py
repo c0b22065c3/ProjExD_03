@@ -91,7 +91,14 @@ class Beam:
         ビーム画像Surfaceを生成する
         引数 bird：こうかとんインスタンス（Birdクラスのインスタンス）
         """
-        self.img = pg.image.load(f"ex03/fig/beam.png")
+        self.img = pg.transform.flip(  # 左右反転
+            pg.transform.rotozoom(  # 2倍に拡大
+                pg.image.load(f"ex03/fig/beam.png"), 
+                0, 
+                2.0), 
+            True, 
+            False
+        )
         self.rct = self.img.get_rect()
         self.rct.left = bird.rct.right  # こうかとんの右横座標
         self.rct.centery = bird.rct.centery  # こうかとんの中心縦座標
@@ -151,7 +158,7 @@ class Explosion:
         引数1 爆弾インスタンス
         引数2 爆発時間
         """
-        self.img = pg.image.load(f"ex03/fig/beam.png")
+        self.img = pg.image.load(f"ex03/fig/explosion.gif")
         self.img_list = [
             pg.transform.flip(self.img, False, False),
             pg.transform.flip(self.img, False, True),
@@ -172,13 +179,13 @@ class Explosion:
         screen.blit(self.img_list[self.life], self.rct)
 
 
-
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
     bg_img = pg.image.load("ex03/fig/pg_bg.jpg")
     bird = Bird(3, (900, 400))
     bombs = [Bomb() for _ in range(NUM_OF_BOMBS)]
+    expl = []
     beam = None
 
     clock = pg.time.Clock()
@@ -208,6 +215,7 @@ def main():
                     beam = None
                     bombs[i] = None
                     bird.change_img(6, screen)
+                    expl.append(Explosion(bomb, 3))
                     pg.display.update()
         bombs = [bomb for bomb in bombs if bomb is not None]                        
 
@@ -217,6 +225,11 @@ def main():
             bomb.update(screen)
         if beam is not None:
             beam.update(screen)
+        if expl != []:
+            for i, ex in enumerate(expl):
+                ex.update(screen)
+                if ex.life == 0:
+                    del expl[i]
         pg.display.update()
         tmr += 1
         clock.tick(50)
