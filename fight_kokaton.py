@@ -1,3 +1,4 @@
+import math
 import random
 import sys
 import time
@@ -56,6 +57,7 @@ class Bird:
         self.img = self.imgs[(+5, 0)]
         self.rct = self.img.get_rect()
         self.rct.center = xy
+        self.dire = (+5, 0)
 
     def change_img(self, num: int, screen: pg.Surface):
         """
@@ -84,6 +86,9 @@ class Bird:
             self.img = self.imgs[tuple(sum_mv)]
         screen.blit(self.img, self.rct)
 
+        if sum_mv != [0, 0]:
+            self.dire = sum_mv
+
 
 class Beam:
     def __init__(self, bird: Bird):
@@ -102,7 +107,9 @@ class Beam:
         self.rct = self.img.get_rect()
         self.rct.left = bird.rct.right  # こうかとんの右横座標
         self.rct.centery = bird.rct.centery  # こうかとんの中心縦座標
-        self.vx, self.vy = +5, 0
+        self.vx, self.vy = bird.dire[0], bird.dire[1]
+        math.atan2(-self.vy, self.vx)
+        
 
     def update(self, screen: pg.Surface):
         """
