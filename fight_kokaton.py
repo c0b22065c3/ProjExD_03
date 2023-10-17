@@ -186,7 +186,7 @@ def main():
     bird = Bird(3, (900, 400))
     bombs = [Bomb() for _ in range(NUM_OF_BOMBS)]
     expl = []
-    beam = None
+    beam_list = []
 
     clock = pg.time.Clock()
     tmr = 0
@@ -196,7 +196,7 @@ def main():
                 return
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
                 # キーが押されたら，かつ，キーの種類がスペースキーだったら
-                beam = Beam(bird)
+                beam_list.append(Beam(bird))
 
         
         screen.blit(bg_img, [0, 0])
