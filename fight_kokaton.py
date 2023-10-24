@@ -201,30 +201,32 @@ def main():
         
         screen.blit(bg_img, [0, 0])
         
-        for bomb in bombs:
-            if bird.rct.colliderect(bomb.rct):
-                # ゲームオーバー時に，こうかとん画像を切り替え，1秒間表示させる
-                bird.change_img(8, screen)
-                pg.display.update()
-                time.sleep(1)
-                return
+        # for bomb in bombs:
+        #     if bird.rct.colliderect(bomb.rct):
+        #         # ゲームオーバー時に，こうかとん画像を切り替え，1秒間表示させる
+        #         bird.change_img(8, screen)
+        #         pg.display.update()
+        #         time.sleep(1)
+        #         return
         for i, bomb in enumerate(bombs):
-            if beam is not None:
-                if beam.rct.colliderect(bomb.rct):  # ビームと爆弾の衝突判定
-                    # 撃墜＝Noneにする
-                    beam = None
-                    bombs[i] = None
-                    bird.change_img(6, screen)
-                    expl.append(Explosion(bomb, 3))
-                    pg.display.update()
+            if beam_list != []:
+                for j, beam in enumerate(beam_list):
+                    if beam.rct.colliderect(bomb.rct):  # ビームと爆弾の衝突判定
+                        # 撃墜＝Noneにする
+                        del beam[j]
+                        bombs[i] = None
+                        bird.change_img(6, screen)
+                        expl.append(Explosion(bomb, 3))
+                        pg.display.update()
         bombs = [bomb for bomb in bombs if bomb is not None]                        
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
         for bomb in bombs:
             bomb.update(screen)
-        if beam is not None:
-            beam.update(screen)
+        if beam_list != []:
+            for b in beam_list:
+                b.update(screen)
         if expl != []:
             for i, ex in enumerate(expl):
                 ex.update(screen)
